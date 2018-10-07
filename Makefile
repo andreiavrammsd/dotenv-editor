@@ -7,7 +7,9 @@ all: build
 
 install:
 	go get -t ./...
-	go get -u github.com/go-bindata/go-bindata/...
+	go get -u \
+	    github.com/go-bindata/go-bindata/... \
+	    github.com/tdewolff/minify/cmd/minify
 	curl -L https://git.io/vp6lP | sh
 	sudo mv bin/* /usr/local/bin && rm -r bin
 	sudo apt install upx -y
@@ -37,8 +39,10 @@ build: test
 	mkdir -p $(BUILD)
 
 	cp -r ui $(BUILD)
+	minify -o $(BUILD)/ui ui/
 	go-bindata -prefix="$(BUILD)/" $(BUILD)/ui/...
 
+	@ # https://gist.github.com/FiloSottile/6c41098cc238988a900edb2ec5d27e6f
 	GOOS=linux go build -ldflags="-s -w" -o $(BIN).tmp
 	upx -f --brute -o $(BIN) $(BIN).tmp
 	rm $(BIN).tmp

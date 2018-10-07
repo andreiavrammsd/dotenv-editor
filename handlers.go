@@ -10,8 +10,7 @@ import (
 
 	"io"
 
-	"path/filepath"
-	"strings"
+	"encoding/base64"
 
 	"github.com/andreiavrammsd/dotenv-editor/env"
 )
@@ -83,47 +82,55 @@ func defaultHandler(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 
-	t, err := template.New(html).Parse(string(content))
+	funcMap := template.FuncMap{
+		"src": func(b []byte) template.Srcset {
+			return template.Srcset(b)
+		},
+		"css": func(b []byte) template.CSS {
+			return template.CSS(b)
+		},
+		"js": func(b []byte) template.JS {
+			return template.JS(b)
+		},
+	}
+
+	favicon, err := Asset("ui/favicon.png")
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	faviconEncoded := make([]byte, base64.StdEncoding.EncodedLen(len(favicon)))
+	base64.StdEncoding.Encode(faviconEncoded, favicon)
+
+	css, err := Asset("ui/style.css")
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	if err := t.Execute(w, nil); err != nil {
-		log.Println(err)
-	}
-}
-
-func faviconHandler(w http.ResponseWriter, _ *http.Request) {
-	content, err := Asset("ui/favicon.png")
+	js, err := Asset("ui/script.js")
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	w.Header().Set("Content-Type", "image/png")
-	if _, err := w.Write(content); err != nil {
-		log.Println(err)
+	data := struct {
+		Favicon []byte
+		CSS     []byte
+		JS      []byte
+	}{
+		faviconEncoded,
+		css,
+		js,
 	}
-}
 
-func staticHandler(w http.ResponseWriter, r *http.Request) {
-	path := strings.Trim(r.URL.Path, "/")
-	ext := strings.TrimPrefix(filepath.Ext(path), ".")
-
-	content, err := Asset(path)
+	t, err := template.New(html).Funcs(funcMap).Parse(string(content))
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	contentTypes := map[string]string{
-		"css": "text/css",
-		"js":  "text/javascript",
-	}
-
-	w.Header().Set("Content-Type", contentTypes[ext])
-	if _, err := w.Write(content); err != nil {
+	if err := t.Execute(w, data); err != nil {
 		log.Println(err)
 	}
 }

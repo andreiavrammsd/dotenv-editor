@@ -4,8 +4,8 @@
         <title>DotEnv Editor</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" type="text/css" href="ui/style.css" />
-        <link rel="shortcut icon" type="image/png" href="favicon.png" />
+        <link href="data:image/x-icon;base64,{{.Favicon|src}}" rel="icon" type="image/x-icon" />
+        <style type="text/css">{{.CSS|css}}</style>
     </head>
     
     <body>
@@ -64,6 +64,6 @@
             <textarea id="save-source" name="src" class="hidden"></textarea>
         </form>
 
-        <script src="ui/script.js"></script>
+        <script>{{.JS|js}}</script>
     </body>
 </html>

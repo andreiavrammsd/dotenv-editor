@@ -18,8 +18,6 @@ func main() {
 	environment = env.New()
 
 	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/favicon.png", faviconHandler)
-	http.HandleFunc("/ui/", staticHandler)
 	http.HandleFunc("/env/current", currentEnvHandler)
 	http.HandleFunc("/env/save", saveEnvHandler)
 	http.HandleFunc("/env/file", fileEnvHandler)
