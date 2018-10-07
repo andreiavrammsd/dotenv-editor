@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>DotEnv Editor</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" type="text/css" href="ui/style.css" />
+        <link rel="shortcut icon" type="image/png" href="favicon.png" />
+    </head>
+    
+    <body>
+        <div class="page">
+            <h1>DotEnv Editor</h1>
+            <input type="text" id="search" name="search" placeholder="Search..." autocomplete="off">
+            
+            <div class="buttons">
+                <button type="button" class="hidden" id="restore">Restore (<span id="counter"></span>)</button>
+                <button type="button" id="add">Add</button>
+                <button type="button" id="clear">Clear</button>
+                <label class="button">
+                    <span>Load from file</span>
+					<input type="file" id="file" hidden>
+                </label>
+                <button type="button" id="current">Load current</button>
+                <button type="button" id="save">Save</button>
+            </div>
+                        
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Variable</th>
+                        <th>Value</th>
+                        <th>Comment</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody id="env"></tbody>
+            </table>
+
+        </div>
+
+        <script id="template" type="text/template">
+            <tr data-key="{{`{{name}}`}}" data-index="{{`{{index}}`}}">
+                <th scope="row">{{`{{index}}`}}</th>
+                <td>
+                    <input value="{{`{{name}}`}}" class="form-control validate" type="text" name="name" pattern="[a-zA-Z_]{1,}[a-zA-Z0-9_]{0,}" autocomplete="off" required>
+                </td>
+                <td>
+                    <textarea class="form-control" name="value" autocomplete="off">{{`{{value}}`}}</textarea>
+                </td>
+                <td>
+                    <input value="{{`{{comment}}`}}" class="form-control" type="text" name="comment" autocomplete="off">
+                </td>
+                <td class="remove">
+                    <a href="#">x</a>
+                </td>
+            </tr>
+        </script>
+
+        <form id="save-form" action="/env/save" method="post">
+            <input id="save-input" type="hidden" name="data">
+            <textarea id="save-source" name="src" class="hidden"></textarea>
+        </form>
+
+        <script src="ui/script.js"></script>
+    </body>
+</html>

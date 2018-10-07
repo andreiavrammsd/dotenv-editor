@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+textarea, input, button {
+    font-family: inherit;
+    font-size: inherit;
+    border: 1px solid #cdd3d9;
+    border-radius: 3px;
+}
+
+input:focus, textarea:focus {
+    border: 1px solid rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+h1 {
+    color: black;
+    font-weight: normal;
+    font-size: 35px;
+    margin: 0;
+    padding: 30px 0;
+}
+
+
+.hidden, .deleted {
+    display: none !important;
+}
+
+.error {
+    border: 1px solid red !important;
+}
+
+.page {
+    width: 90%;
+    max-width: 1700px;
+    margin: auto;
+}
+    
+    #search {
+        width: 100%;
+        padding: 10px 10px 10px 6px;
+        margin-bottom: 25px;
+    }
+
+    .buttons {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+    }
+
+        .buttons button, .buttons label {
+            display: inline-block;
+            height: 33px;
+            font-size: 15px;
+            color: #ffffff;
+            background-color: #0078fa;
+            vertical-align: center;
+            margin-left: 4px;
+            padding: 0 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+        }
+    
+        .buttons button:hover, .buttons label:hover {
+            background-color: #0067d4;
+        }
+
+        .buttons label.button {
+            position: relative;
+            bottom: 8px;
+        }
+
+            .buttons label.button span {
+                position: relative;
+                top: 7px;
+            }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-top: 1px solid #cdd3d9;
+        margin-bottom: 25px;
+    }
+        
+        th, td {
+            text-align: left;
+            padding-left: 10px;
+        }
+        
+        thead th {
+            height: 40px;
+        }
+
+        td {
+            vertical-align: top;
+            height: 75px;
+            min-height: 75px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        
+        td:first-child {
+            font-weight: bold;
+        }
+            
+            td a {
+                display: block;
+                width: 20px;
+                height: 20px;
+                line-height: 18px;
+                margin: auto;
+                text-align: center;
+                vertical-align: middle;
+                text-decoration: none;
+                border: 1px solid #000000;
+                border-radius: 10px;
+                color: #000;
+            }
+            
+            td a:hover {
+                border: 1.5px solid #ff0000;
+                color: red;
+            }    
+            
+        tr:not(:last-child) {
+            border-bottom: 1px solid #dde1e5;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+        
+        tbody tr:hover {
+            background-color: #ebebeb;
+        }
+                
+            tr input, tr textarea {
+                width: 100%;
+                padding: 8px 10px;
+                color: #4a5157;
+                font-size: 14px;
+            }
+            
+            tr textarea {
+                height: 52px;
+                min-height: 34px;
+                resize: vertical;
+            }
