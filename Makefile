@@ -2,6 +2,7 @@
 
 BUILD := $(CURDIR)/build
 BIN := $(BUILD)/dotenv
+COVER := $(BUILD)/cover.out
 
 all: build
 
@@ -19,7 +20,8 @@ run:
 	go run .
 
 test:
-	go test ./...
+	mkdir -p $(BUILD)
+	go test ./... -coverprofile $(COVER) && go tool cover -html=$(COVER)
 
 qa:
 	gometalinter \
