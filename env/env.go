@@ -105,7 +105,7 @@ func (e *env) getVarsFromList(list []string) []Variable {
 		v := Variable{}
 		v.Index = index
 		v.Name = data[1]
-		v.Value = data[2]
+		v.Value = strings.TrimSpace(data[2])
 		v.Comment = strings.TrimLeftFunc(data[3], func(r rune) bool {
 			return r == ' ' || r == '#'
 		})
@@ -116,9 +116,13 @@ func (e *env) getVarsFromList(list []string) []Variable {
 	return vars
 }
 
+var linePattern = func() string {
+	return pattern
+}
+
 // New sets up env package
 func New() (Env, error) {
-	reg, err := regexp.Compile(pattern)
+	reg, err := regexp.Compile(linePattern())
 	if err != nil {
 		return nil, err
 	}

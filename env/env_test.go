@@ -36,21 +36,37 @@ func TestEnv_Current(t *testing.T) {
 
 func TestEnv_FromInput(t *testing.T) {
 	input := `
-		KEY=VALUE
-		KEY2=VALUE2
+
+#test=asdasd
+  
+UNITY_HAS_2D_SUPPORT=false  # comm
+INSTANCE=   
+
+x
+GNOME_DESKTOP_SESSION_ID=this-is-deprecated # 
+
 	`
 
 	expected := []Variable{
 		{
 			Index:   1,
-			Name:    "KEY",
-			Value:   "VALUE",
+			Name:    "UNITY_HAS_2D_SUPPORT",
+			Value:   "false",
+			Comment: "comm",
 			Deleted: false,
 		},
 		{
 			Index:   2,
-			Name:    "KEY2",
-			Value:   "VALUE2",
+			Name:    "INSTANCE",
+			Value:   "",
+			Comment: "",
+			Deleted: false,
+		},
+		{
+			Index:   3,
+			Name:    "GNOME_DESKTOP_SESSION_ID",
+			Value:   "this-is-deprecated",
+			Comment: "",
 			Deleted: false,
 		},
 	}
@@ -59,4 +75,19 @@ func TestEnv_FromInput(t *testing.T) {
 	vars := e.FromInput(input)
 
 	assert.Equal(t, expected, vars)
+}
+
+func TestNew(t *testing.T) {
+	e, err := New()
+	assert.Implements(t, (*Env)(nil), e)
+	assert.NoError(t, err)
+}
+
+func TestNewWithError(t *testing.T) {
+	linePattern = func() string {
+		return "^([a-zA-Z_]"
+	}
+	e, err := New()
+	assert.Nil(t, e)
+	assert.Error(t, err)
 }
