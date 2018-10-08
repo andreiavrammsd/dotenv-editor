@@ -6,21 +6,22 @@ import (
 	"net/http"
 
 	"github.com/andreiavrammsd/dotenv-editor/env"
+	"github.com/andreiavrammsd/dotenv-editor/handlers"
 )
 
 var (
-	environment env.Env
-	addr        = flag.String("addr", ":8811", "-addr 127.0.0.1:8811")
+	addr = flag.String("addr", ":8811", "-addr 127.0.0.1:8811")
 )
 
 func main() {
 	flag.Parse()
-	environment = env.New()
+	environment := env.New()
+	h := handlers.New(environment)
 
-	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/env/current", currentEnvHandler)
-	http.HandleFunc("/env/save", saveEnvHandler)
-	http.HandleFunc("/env/file", fileEnvHandler)
+	http.HandleFunc("/", h.Default)
+	http.HandleFunc("/env/current", h.GetCurrent)
+	http.HandleFunc("/env/save", h.SaveAsFile)
+	http.HandleFunc("/env/file", h.LoadFromFile)
 
 	log.Printf("Listening on %s", *addr)
 	log.Fatal(http.ListenAndServe(*addr, nil))

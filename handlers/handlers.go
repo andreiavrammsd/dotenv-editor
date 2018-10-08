@@ -1,4 +1,4 @@
-package main
+package handlers
 
 import (
 	"encoding/json"
@@ -15,18 +15,28 @@ import (
 	"github.com/andreiavrammsd/dotenv-editor/env"
 )
 
-func currentEnvHandler(w http.ResponseWriter, _ *http.Request) {
+// Handlers for HTTP calls
+type Handlers struct {
+	env env.Env
+}
+
+// GetCurrent loads the env list from
+// the current machine and generates a list
+func (h Handlers) GetCurrent(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	encoder := json.NewEncoder(w)
-	err := encoder.Encode(environment.Current())
+	err := encoder.Encode(h.env.Current())
 	if err != nil {
 		log.Println(err)
 	}
 }
 
-func saveEnvHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+// SaveAsFile generates a dotenv file based on submitted vars list
+func (h Handlers) SaveAsFile(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		log.Fatal(err)
+	}
 
 	vars := make(map[string]env.Variable)
 	err := json.Unmarshal([]byte(r.Form.Get("data")), &vars)
@@ -37,9 +47,9 @@ func saveEnvHandler(w http.ResponseWriter, r *http.Request) {
 	out := ""
 	src := r.Form.Get("src")
 	if src != "" {
-		out = environment.Update(src, vars)
+		out = h.env.Update(src, vars)
 	} else {
-		out = environment.ToFile(vars)
+		out = h.env.ToFile(vars)
 	}
 
 	content := []byte(out)
@@ -53,7 +63,8 @@ func saveEnvHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fileEnvHandler(w http.ResponseWriter, r *http.Request) {
+// LoadFromFile generates the env list from an uploaded file
+func (h Handlers) LoadFromFile(w http.ResponseWriter, r *http.Request) {
 	data := make([]byte, r.ContentLength)
 	_, err := r.Body.Read(data)
 	if err != nil && err != io.EOF {
@@ -61,19 +72,24 @@ func fileEnvHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	defer r.Body.Close()
+	defer func() {
+		if e := r.Body.Close(); e != nil {
+			log.Println(e)
+		}
+	}()
 
 	w.Header().Set("Content-Type", "application/json")
 
 	encoder := json.NewEncoder(w)
-	err = encoder.Encode(environment.FromInput(string(data)))
+	err = encoder.Encode(h.env.FromInput(string(data)))
 	if err != nil {
 		log.Println(err)
 		return
 	}
 }
 
-func defaultHandler(w http.ResponseWriter, _ *http.Request) {
+// Default sets up the UI
+func (Handlers) Default(w http.ResponseWriter, _ *http.Request) {
 	html := "ui/index.html"
 
 	content, err := Asset(html)
@@ -133,4 +149,9 @@ func defaultHandler(w http.ResponseWriter, _ *http.Request) {
 	if err := t.Execute(w, data); err != nil {
 		log.Println(err)
 	}
+}
+
+// New initializes the handlers functions
+func New(env env.Env) Handlers {
+	return Handlers{env}
 }

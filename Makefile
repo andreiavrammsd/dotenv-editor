@@ -15,7 +15,7 @@ install:
 	sudo apt install upx -y
 
 run:
-	go-bindata -debug ui/...
+	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
 	go run .
 
 test:
@@ -23,8 +23,7 @@ test:
 
 qa:
 	gometalinter \
-		--enable=staticcheck \
-		--enable=gosimple \
+		--enable=megacheck \
 		--enable=gochecknoglobals \
 		--enable=gofmt \
 		--enable=gochecknoinits \
@@ -32,7 +31,6 @@ qa:
 		--enable=lll \
 		--enable=nakedret \
 		--enable=unparam \
-		--enable=unused \
 		./...
 
 build: test
@@ -40,7 +38,7 @@ build: test
 
 	cp -r ui $(BUILD)
 	minify -o $(BUILD)/ui ui/
-	go-bindata -prefix="$(BUILD)/" $(BUILD)/ui/...
+	go-bindata -pkg="handlers" -o="./handlers/bindata.go" -prefix="$(BUILD)/" $(BUILD)/ui/...
 
 	@ # https://gist.github.com/FiloSottile/6c41098cc238988a900edb2ec5d27e6f
 	GOOS=linux go build -ldflags="-s -w" -o $(BIN).tmp
