@@ -47,7 +47,7 @@ func (h Handlers) SaveAsFile(w http.ResponseWriter, r *http.Request) {
 	out := ""
 	src := r.Form.Get("src")
 	if src != "" {
-		out = h.env.Update(src, vars)
+		out = h.env.Sync(src, vars)
 	} else {
 		out = h.env.ToFile(vars)
 	}
@@ -152,6 +152,6 @@ func (Handlers) Default(w http.ResponseWriter, _ *http.Request) {
 }
 
 // New initializes the handlers functions
-func New(env env.Env) Handlers {
-	return Handlers{env}
+func New(e env.Env) Handlers {
+	return Handlers{e}
 }

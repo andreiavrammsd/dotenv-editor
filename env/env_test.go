@@ -28,7 +28,7 @@ func TestEnv_Current(t *testing.T) {
 		os.Setenv(v.Name, v.Value)
 	}
 
-	e := New()
+	e, _ := New()
 	vars := e.Current()
 
 	assert.Equal(t, expected, vars)
@@ -55,7 +55,7 @@ func TestEnv_FromInput(t *testing.T) {
 		},
 	}
 
-	e := New()
+	e, _ := New()
 	vars := e.FromInput(input)
 
 	assert.Equal(t, expected, vars)

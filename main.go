@@ -10,8 +10,12 @@ import (
 )
 
 func main() {
-	environment := env.New()
-	h := handlers.New(environment)
+	e, err := env.New()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	h := handlers.New(e)
 
 	http.HandleFunc("/", h.Default)
 	http.HandleFunc("/env/current", h.GetCurrent)

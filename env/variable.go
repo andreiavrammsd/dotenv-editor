@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Variable model
 type Variable struct {
 	Index   int    `json:"index"`
 	Name    string `json:"name"`
@@ -30,13 +31,12 @@ func (d variablesList) Less(i, j int) bool {
 	return d[i].Index < d[j].Index
 }
 
-func (v Variable) ToLine() (line string) {
+// ToLine generates the string representation of a variable in a file
+func (v Variable) ToLine() string {
 	c := strings.TrimSpace(v.Comment)
 	if c != "" {
 		c = fmt.Sprintf(" # %s", strings.Replace(c, "\n", "", -1))
 	}
 
-	line += fmt.Sprintf("%s=%s%s\n\n", v.Name, v.Value, c)
-
-	return
+	return fmt.Sprintf("%s=%s%s\n\n", v.Name, v.Value, c)
 }
