@@ -49,7 +49,7 @@ func (h Handlers) SaveAsFile(w http.ResponseWriter, r *http.Request) {
 	if src != "" {
 		out = h.env.Sync(src, vars)
 	} else {
-		out = h.env.ToFile(vars)
+		out = h.env.ToString(vars)
 	}
 
 	content := []byte(out)

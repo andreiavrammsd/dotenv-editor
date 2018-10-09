@@ -18,7 +18,7 @@ type Env interface {
 	Current() []Variable
 	FromInput(input string) []Variable
 	Sync(src string, vars map[string]Variable) string
-	ToFile(vars map[string]Variable) string
+	ToString(vars map[string]Variable) string
 }
 
 type env struct {
@@ -65,8 +65,8 @@ func (*env) Sync(src string, vars map[string]Variable) string {
 	return strings.Join(lines, eol)
 }
 
-// ToFile converts variables map to string
-func (*env) ToFile(vars map[string]Variable) string {
+// ToString converts variables list to string
+func (*env) ToString(vars map[string]Variable) string {
 	list := make(variablesList, 0, len(vars))
 
 	for _, v := range vars {
