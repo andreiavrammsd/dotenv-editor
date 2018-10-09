@@ -7,11 +7,11 @@ COVER := $(BUILD)/cover.out
 all: build
 
 install:
-	go get -t ./...
 	go get -u \
 	    github.com/go-bindata/go-bindata/... \
+	    github.com/smartystreets/goconvey \
 	    github.com/tdewolff/minify/cmd/minify
-	curl -L https://git.io/vp6lP | sh
+	curl -L https://git.io/vp6lP | sh #gometalinter
 	sudo mv bin/* /usr/local/bin && rm -r bin
 	sudo apt install upx -y
 
@@ -20,8 +20,7 @@ run:
 	go run .
 
 test:
-	mkdir -p $(BUILD)
-	go test ./... -coverprofile $(COVER) && go tool cover -html=$(COVER)
+	goconvey
 
 qa:
 	gometalinter \

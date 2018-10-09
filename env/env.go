@@ -48,7 +48,7 @@ func (*env) Sync(src string, vars []Variable) string {
 				if v.IsDeleted() {
 					lines = append(lines[:i], lines[i+1:]...)
 				} else {
-					lines[i] = v.ToLine()
+					lines[i] = v.ToString()
 				}
 
 				vars = append(vars[:j], vars[j+1:]...)
@@ -58,7 +58,7 @@ func (*env) Sync(src string, vars []Variable) string {
 	}
 
 	for _, v := range vars {
-		lines = append(lines, v.ToLine())
+		lines = append(lines, v.ToString())
 	}
 
 	return strings.Join(lines, eol)
@@ -68,7 +68,7 @@ func (*env) Sync(src string, vars []Variable) string {
 func (*env) ToString(vars []Variable) (out string) {
 	for _, v := range vars {
 		if !v.IsDeleted() {
-			out += v.ToLine()
+			out += fmt.Sprintf("%s%s", v.ToString(), eol)
 		}
 	}
 	return

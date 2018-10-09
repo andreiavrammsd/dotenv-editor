@@ -25,11 +25,11 @@ func (v Variable) IsRenamed() bool {
 	return v.NewName != nil && *v.NewName != ""
 }
 
-// ToLine generates the string representation of a variable in a file
-func (v Variable) ToLine() string {
+// ToString generates the string representation of a variable in a file
+func (v Variable) ToString() string {
 	c := strings.TrimSpace(v.Comment)
 	if c != "" {
-		c = fmt.Sprintf(" # %s", strings.Replace(c, "\n", "", -1))
+		c = fmt.Sprintf(" # %s", strings.Replace(c, eol, "", -1))
 	}
 
 	name := v.Name
@@ -37,5 +37,5 @@ func (v Variable) ToLine() string {
 		name = *v.NewName
 	}
 
-	return fmt.Sprintf("%s=%s%s\n\n", name, v.Value, c)
+	return fmt.Sprintf("%s=%s%s", name, v.Value, c)
 }

@@ -3,7 +3,7 @@ package env
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 var lineNewName = "new name"
@@ -20,7 +20,7 @@ var toLineTests = []struct {
 			"",
 			nil,
 		},
-		"new name=value\n\n",
+		"new name=value",
 	},
 	{
 		Variable{
@@ -31,7 +31,7 @@ var toLineTests = []struct {
 			"single line comment",
 			nil,
 		},
-		"k=v # single line comment\n\n",
+		"k=v # single line comment",
 	},
 	{
 		Variable{
@@ -42,12 +42,17 @@ var toLineTests = []struct {
 			"multi \n\n line \n comment",
 			nil,
 		},
-		"k=    # multi  line  comment\n\n",
+		"k=    # multi  line  comment",
 	},
 }
 
 func TestVariable_ToLine(t *testing.T) {
-	for _, test := range toLineTests {
-		assert.Equal(t, test.expected, test.v.ToLine())
-	}
+	Convey("Given a variable", t, func() {
+		Convey("It should be converted to its string representation", func() {
+			for _, test := range toLineTests {
+				line := test.v.ToString()
+				So(line, ShouldEqual, test.expected)
+			}
+		})
+	})
 }
