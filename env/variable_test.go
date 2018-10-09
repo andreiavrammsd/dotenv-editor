@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var lineNewName = "new name"
 var toLineTests = []struct {
 	v        Variable
 	expected string
@@ -14,10 +15,10 @@ var toLineTests = []struct {
 		Variable{
 			1,
 			"name",
-			"new name",
+			&lineNewName,
 			"value",
 			"",
-			false,
+			nil,
 		},
 		"new name=value\n\n",
 	},
@@ -25,10 +26,10 @@ var toLineTests = []struct {
 		Variable{
 			2,
 			"k",
-			"k",
+			nil,
 			"v",
 			"single line comment",
-			false,
+			nil,
 		},
 		"k=v # single line comment\n\n",
 	},
@@ -36,10 +37,10 @@ var toLineTests = []struct {
 		Variable{
 			3,
 			"k",
-			"",
+			nil,
 			"   ",
 			"multi \n\n line \n comment",
-			false,
+			nil,
 		},
 		"k=    # multi  line  comment\n\n",
 	},

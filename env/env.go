@@ -45,7 +45,7 @@ func (*env) Sync(src string, vars []Variable) string {
 			linePrefix := fmt.Sprintf("%s=", v.Name)
 
 			if strings.HasPrefix(line, linePrefix) {
-				if v.Deleted {
+				if v.IsDeleted() {
 					lines = append(lines[:i], lines[i+1:]...)
 				} else {
 					lines[i] = v.ToLine()
@@ -67,7 +67,7 @@ func (*env) Sync(src string, vars []Variable) string {
 // ToString converts variables list to string
 func (*env) ToString(vars []Variable) (out string) {
 	for _, v := range vars {
-		if !v.Deleted {
+		if !v.IsDeleted() {
 			out += v.ToLine()
 		}
 	}

@@ -14,16 +14,19 @@ func TestEnv_Current(t *testing.T) {
 		{
 			Index:   1,
 			Name:    "KEY",
+			NewName: nil,
 			Value:   "VALUE",
-			Deleted: false,
+			Deleted: nil,
 		},
 		{
 			Index:   2,
 			Name:    "KEY2",
+			NewName: nil,
 			Value:   "VALUE2",
-			Deleted: false,
+			Deleted: nil,
 		},
 	}
+
 	for _, v := range expected {
 		os.Setenv(v.Name, v.Value)
 	}
@@ -50,23 +53,26 @@ GNOME_DESKTOP_SESSION_ID=this-is-deprecated #
 		{
 			Index:   1,
 			Name:    "UNITY_HAS_2D_SUPPORT",
+			NewName: nil,
 			Value:   "false",
 			Comment: "comm",
-			Deleted: false,
+			Deleted: nil,
 		},
 		{
 			Index:   2,
 			Name:    "INSTANCE",
+			NewName: nil,
 			Value:   "",
 			Comment: "",
-			Deleted: false,
+			Deleted: nil,
 		},
 		{
 			Index:   3,
 			Name:    "GNOME_DESKTOP_SESSION_ID",
+			NewName: nil,
 			Value:   "this-is-deprecated",
 			Comment: "",
-			Deleted: false,
+			Deleted: nil,
 		},
 	}
 
@@ -76,38 +82,46 @@ GNOME_DESKTOP_SESSION_ID=this-is-deprecated #
 }
 
 func TestEnv_ToString(t *testing.T) {
+	newName1 := "UNITY_HAS_2D_SUPPORT"
+	newName2 := "INSTANCE"
+	newName3 := "GNOME_DESKTOP_SESSION_ID"
+	newName4 := "NEWVAR"
+
+	notDeleted := false
+	deleted := true
+
 	vars := []Variable{
 		{
 			Index:   1,
 			Name:    "UNITY_HAS_2D_SUPPORT",
-			NewName: "UNITY_HAS_2D_SUPPORT",
+			NewName: &newName1,
 			Value:   "false",
 			Comment: "comm",
-			Deleted: false,
+			Deleted: &notDeleted,
 		},
 		{
 			Index:   2,
 			Name:    "INSTANCE",
-			NewName: "INSTANCE",
+			NewName: &newName2,
 			Value:   "",
 			Comment: "",
-			Deleted: false,
+			Deleted: &notDeleted,
 		},
 		{
 			Index:   3,
 			Name:    "GNOME_DESKTOP_SESSION_ID",
-			NewName: "GNOME_DESKTOP_SESSION_ID",
+			NewName: &newName3,
 			Value:   "this-is-deprecated",
 			Comment: "",
-			Deleted: false,
+			Deleted: nil,
 		},
 		{
 			Index:   5,
 			Name:    "NEWVAR",
-			NewName: "NEWVAR",
+			NewName: &newName4,
 			Value:   "NEWVAL",
 			Comment: "NEWCOMM",
-			Deleted: true,
+			Deleted: &deleted,
 		},
 	}
 
