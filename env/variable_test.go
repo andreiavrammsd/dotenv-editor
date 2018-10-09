@@ -11,15 +11,36 @@ var toLineTests = []struct {
 	expected string
 }{
 	{
-		Variable{1, "name", "value", "", false},
-		"name=value\n\n",
+		Variable{
+			1,
+			"name",
+			"new name",
+			"value",
+			"",
+			false,
+		},
+		"new name=value\n\n",
 	},
 	{
-		Variable{2, "k", "v", "single line comment", false},
+		Variable{
+			2,
+			"k",
+			"k",
+			"v",
+			"single line comment",
+			false,
+		},
 		"k=v # single line comment\n\n",
 	},
 	{
-		Variable{3, "k", "   ", "multi \n\n line \n comment", false},
+		Variable{
+			3,
+			"k",
+			"",
+			"   ",
+			"multi \n\n line \n comment",
+			false,
+		},
 		"k=    # multi  line  comment\n\n",
 	},
 }

@@ -38,7 +38,7 @@ func (h Handlers) SaveAsFile(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	vars := make(map[string]env.Variable)
+	var vars []env.Variable
 	err := json.Unmarshal([]byte(r.Form.Get("data")), &vars)
 	if err != nil {
 		log.Fatal(err)

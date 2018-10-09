@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"regexp"
-	"sort"
 	"strings"
 )
 
@@ -17,8 +16,8 @@ const (
 type Env interface {
 	Current() []Variable
 	FromInput(input string) []Variable
-	Sync(src string, vars map[string]Variable) string
-	ToString(vars map[string]Variable) string
+	Sync(src string, vars []Variable) string
+	ToString(vars []Variable) string
 }
 
 type env struct {
@@ -38,12 +37,12 @@ func (e *env) FromInput(input string) []Variable {
 }
 
 // Sync updates a dotenv file content with variables map
-func (*env) Sync(src string, vars map[string]Variable) string {
+func (*env) Sync(src string, vars []Variable) string {
 	lines := strings.Split(src, eol)
 
 	for i, line := range lines {
-		for key, v := range vars {
-			linePrefix := fmt.Sprintf("%s=", key)
+		for j, v := range vars {
+			linePrefix := fmt.Sprintf("%s=", v.Name)
 
 			if strings.HasPrefix(line, linePrefix) {
 				if v.Deleted {
@@ -52,7 +51,7 @@ func (*env) Sync(src string, vars map[string]Variable) string {
 					lines[i] = v.ToLine()
 				}
 
-				delete(vars, key)
+				vars = append(vars[:j], vars[j+1:]...)
 				break
 			}
 		}
@@ -66,23 +65,13 @@ func (*env) Sync(src string, vars map[string]Variable) string {
 }
 
 // ToString converts variables list to string
-func (*env) ToString(vars map[string]Variable) string {
-	list := make(variablesList, 0, len(vars))
-
+func (*env) ToString(vars []Variable) (out string) {
 	for _, v := range vars {
 		if !v.Deleted {
-			list = append(list, v)
+			out += v.ToLine()
 		}
 	}
-
-	sort.Sort(list)
-
-	out := ""
-	for _, v := range list {
-		out += v.ToLine()
-	}
-
-	return out
+	return
 }
 
 func (e *env) getVarsFromList(list []string) []Variable {
@@ -116,12 +105,8 @@ func (e *env) getVarsFromList(list []string) []Variable {
 	return vars
 }
 
-var linePattern = func() string {
-	return pattern
-}
-
 // New sets up env package
 func New() Env {
-	reg := regexp.MustCompile(linePattern())
+	reg := regexp.MustCompile(pattern)
 	return &env{reg: reg}
 }

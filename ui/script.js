@@ -75,7 +75,6 @@ file.addEventListener('change', function() {
 
 // Save to file
 save.addEventListener('click', function() {
-    const data = {};
     let isValid = true;
 
     const elements = env.querySelectorAll('tr');
@@ -84,6 +83,7 @@ save.addEventListener('click', function() {
         return false;
     }
 
+    const vars = [];
     elements .forEach(function(e) {
         const err = e.querySelector('.error');
         if (err !== null) {
@@ -92,13 +92,14 @@ save.addEventListener('click', function() {
             return false;
         }
 
-        data[e.dataset.key] = {
+        vars.push({
             index: parseInt(e.dataset.index, 10),
-            name: e.querySelector('[name="name"]').value,
+            name: e.dataset.name,
+            new_name: e.querySelector('[name="name"]').value,
             value: e.querySelector('[name="value"]').value,
             comment: e.querySelector('[name="comment"]').value,
             deleted: e.classList.contains('deleted'),
-        };
+        });
 
     });
 
@@ -106,7 +107,7 @@ save.addEventListener('click', function() {
         return false;
     }
 
-    saveInput.value = JSON.stringify(data);
+    saveInput.value = JSON.stringify(vars);
     saveForm.submit();
 });
 

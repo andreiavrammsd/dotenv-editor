@@ -76,31 +76,35 @@ GNOME_DESKTOP_SESSION_ID=this-is-deprecated #
 }
 
 func TestEnv_ToString(t *testing.T) {
-	vars := map[string]Variable{
-		"GNOME_DESKTOP_SESSION_ID": {
-			Index:   3,
-			Name:    "GNOME_DESKTOP_SESSION_ID",
-			Value:   "this-is-deprecated",
-			Comment: "",
-			Deleted: false,
-		},
-		"UNITY_HAS_2D_SUPPORT": {
+	vars := []Variable{
+		{
 			Index:   1,
 			Name:    "UNITY_HAS_2D_SUPPORT",
+			NewName: "UNITY_HAS_2D_SUPPORT",
 			Value:   "false",
 			Comment: "comm",
 			Deleted: false,
 		},
-		"INSTANCE": {
+		{
 			Index:   2,
 			Name:    "INSTANCE",
+			NewName: "INSTANCE",
 			Value:   "",
 			Comment: "",
 			Deleted: false,
 		},
-		"NEWVAR": {
+		{
+			Index:   3,
+			Name:    "GNOME_DESKTOP_SESSION_ID",
+			NewName: "GNOME_DESKTOP_SESSION_ID",
+			Value:   "this-is-deprecated",
+			Comment: "",
+			Deleted: false,
+		},
+		{
 			Index:   5,
 			Name:    "NEWVAR",
+			NewName: "NEWVAR",
 			Value:   "NEWVAL",
 			Comment: "NEWCOMM",
 			Deleted: true,
