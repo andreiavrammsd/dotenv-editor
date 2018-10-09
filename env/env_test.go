@@ -28,8 +28,7 @@ func TestEnv_Current(t *testing.T) {
 		os.Setenv(v.Name, v.Value)
 	}
 
-	e, _ := New()
-	vars := e.Current()
+	vars := New().Current()
 
 	assert.Equal(t, expected, vars)
 }
@@ -71,23 +70,11 @@ GNOME_DESKTOP_SESSION_ID=this-is-deprecated #
 		},
 	}
 
-	e, _ := New()
-	vars := e.FromInput(input)
+	vars := New().FromInput(input)
 
 	assert.Equal(t, expected, vars)
 }
 
 func TestNew(t *testing.T) {
-	e, err := New()
-	assert.Implements(t, (*Env)(nil), e)
-	assert.NoError(t, err)
-}
-
-func TestNewWithError(t *testing.T) {
-	linePattern = func() string {
-		return "^([a-zA-Z_]"
-	}
-	e, err := New()
-	assert.Nil(t, e)
-	assert.Error(t, err)
+	assert.Implements(t, (*Env)(nil), New())
 }

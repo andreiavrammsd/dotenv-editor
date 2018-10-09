@@ -121,11 +121,7 @@ var linePattern = func() string {
 }
 
 // New sets up env package
-func New() (Env, error) {
-	reg, err := regexp.Compile(linePattern())
-	if err != nil {
-		return nil, err
-	}
-
-	return &env{reg: reg}, nil
+func New() Env {
+	reg := regexp.MustCompile(linePattern())
+	return &env{reg: reg}
 }
