@@ -76,10 +76,14 @@ func (h Handlers) SaveAsFile(w http.ResponseWriter, r *http.Request) {
 
 // LoadFromFile generates the env list from an uploaded file
 func (h Handlers) LoadFromFile(w http.ResponseWriter, r *http.Request) {
-	data := make([]byte, r.ContentLength)
-	_, err := r.Body.Read(data)
+	input := make([]byte, r.ContentLength)
+	n, err := r.Body.Read(input)
 	if err != nil && err != io.EOF {
 		log.Println(err)
+		return
+	}
+	if int64(n) != r.ContentLength {
+		log.Println(errors.New("error reading request body"))
 		return
 	}
 
@@ -89,13 +93,21 @@ func (h Handlers) LoadFromFile(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 
-	w.Header().Set("Content-Type", "application/json")
-
-	encoder := json.NewEncoder(w)
-	err = encoder.Encode(h.env.FromInput(string(data)))
+	data, err := json.Marshal(h.env.FromInput(string(input)))
 	if err != nil {
 		log.Println(err)
 		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+
+	n, err = w.Write(data)
+	if n != len(data) {
+		log.Println(errors.New("error writing response"))
+		return
+	}
+	if err != nil {
+		log.Println(err)
 	}
 }
 
