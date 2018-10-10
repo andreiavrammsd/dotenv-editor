@@ -33,24 +33,24 @@ func (m *EnvMock) ToString(vars []env.Variable) string {
 }
 
 // HTTP writer mock
-type Writer struct {
+type WriterMock struct {
 	mock.Mock
 	Body       []byte
 	StatusCode int
 }
 
-func (w *Writer) Header() http.Header {
+func (w *WriterMock) Header() http.Header {
 	args := w.Called()
 	return args.Get(0).(http.Header)
 }
 
-func (w *Writer) Write(data []byte) (int, error) {
+func (w *WriterMock) Write(data []byte) (int, error) {
 	w.Body = data
 	args := w.Called()
 	return args.Int(0), args.Error(1)
 }
 
-func (w *Writer) WriteHeader(statusCode int) {
+func (w *WriterMock) WriteHeader(statusCode int) {
 }
 
 func TestHandlers_GetCurrent(t *testing.T) {
@@ -76,7 +76,7 @@ func TestHandlers_GetCurrent(t *testing.T) {
 	expectedContentType := "application/json"
 
 	Convey("Given an HTTP handler for /env/current", t, func() {
-		writer := &Writer{}
+		writer := &WriterMock{}
 		request := &http.Request{}
 		environment := &EnvMock{}
 
