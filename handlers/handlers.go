@@ -12,6 +12,8 @@ import (
 
 	"encoding/base64"
 
+	"errors"
+
 	"github.com/andreiavrammsd/dotenv-editor/env"
 )
 
@@ -23,10 +25,19 @@ type Handlers struct {
 // GetCurrent loads the env list from
 // the current machine and generates a list
 func (h Handlers) GetCurrent(w http.ResponseWriter, _ *http.Request) {
+	data, err := json.Marshal(h.env.Current())
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 
-	encoder := json.NewEncoder(w)
-	err := encoder.Encode(h.env.Current())
+	n, err := w.Write(data)
+	if n != len(data) {
+		log.Println(errors.New("error writing response"))
+		return
+	}
 	if err != nil {
 		log.Println(err)
 	}

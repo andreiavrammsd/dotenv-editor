@@ -10,6 +10,7 @@ install:
 	go get -u \
 	    github.com/go-bindata/go-bindata/... \
 	    github.com/smartystreets/goconvey \
+	    github.com/stretchr/testify/mock \
 	    github.com/tdewolff/minify/cmd/minify
 	curl -L https://git.io/vp6lP | sh #gometalinter
 	sudo mv bin/* /usr/local/bin && rm -r bin
