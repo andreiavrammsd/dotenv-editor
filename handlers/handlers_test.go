@@ -56,20 +56,20 @@ func (w *WriterMock) WriteHeader(statusCode int) {
 func TestHandlers_GetCurrent(t *testing.T) {
 	vars := []env.Variable{
 		{
-			1,
-			"USER",
-			nil,
-			"MSD",
-			" # auth",
-			nil,
+			Index:   1,
+			Name:    "USER",
+			NewName: nil,
+			Value:   "MSD",
+			Comment: " # auth",
+			Deleted: nil,
 		},
 		{
-			2,
-			"ENV",
-			nil,
-			"uat",
-			"",
-			nil,
+			Index:   2,
+			Name:    "ENV",
+			NewName: nil,
+			Value:   "uat",
+			Comment: "",
+			Deleted: nil,
 		},
 	}
 	expectedBody, _ := json.Marshal(vars)
