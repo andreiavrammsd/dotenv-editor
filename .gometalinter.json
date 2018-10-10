@@ -1,0 +1,33 @@
+{
+  "Enable":[
+    "vet",
+    "deadcode",
+    "unconvert",
+    "varcheck",
+    "megacheck",
+    "gochecknoglobals",
+    "gofmt",
+    "gochecknoinits",
+    "goimports",
+    "lll",
+    "nakedret",
+    "unparam",
+    "gosec",
+    "gocyclo",
+    "gotype",
+    "gotypex",
+    "golint",
+    "structcheck",
+    "maligned",
+    "errcheck",
+    "megacheck",
+    "dupl",
+    "ineffassign",
+    "interfacer",
+    "goconst"
+  ],
+  "Fast": true,
+  "Exclude": [
+    "handlers/bindata.go"
+  ]
+}

@@ -21,19 +21,17 @@ run:
 	go run .
 
 test:
+	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
+	go test ./...
+
+convey:
+	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
 	goconvey
 
 qa:
-	gometalinter \
-		--enable=megacheck \
-		--enable=gochecknoglobals \
-		--enable=gofmt \
-		--enable=gochecknoinits \
-		--enable=goimports \
-		--enable=lll \
-		--enable=nakedret \
-		--enable=unparam \
-		./...
+	go tool vet -all . env handlers
+	go vet ./...
+	gometalinter  ./...
 
 build: test
 	mkdir -p $(BUILD)
