@@ -3,6 +3,7 @@
 BUILD := $(CURDIR)/build
 BIN := $(BUILD)/dotenv
 COVER := $(BUILD)/cover.out
+IMAGE := andreiavrammsd/dotenv-editor
 
 all: build
 
@@ -16,26 +17,21 @@ install:
 	sudo mv bin/* /usr/local/bin && rm -r bin
 	sudo apt install upx -y
 
-run:
-	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
+run: bindatadebug
 	go run .
 
-test:
-	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
+test: bindatadebug
 	go test ./...
 
-convey:
-	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
+convey: init bindatadebug
 	goconvey
 
-qa:
+qa: init
 	go tool vet -all . env handlers
 	go vet ./...
-	gometalinter  ./...
+	gometalinter --config dev/.gometalinter.json ./...
 
-build: test
-	mkdir -p $(BUILD)
-
+build: init test qa
 	cp -r ui $(BUILD)
 	minify -o $(BUILD)/ui ui/
 	go-bindata -pkg="handlers" -o="./handlers/bindata.go" -prefix="$(BUILD)/" $(BUILD)/ui/...
@@ -46,4 +42,20 @@ build: test
 	rm $(BIN).tmp
 
 clean:
-	rm -r build
+	@ if [ -d $(BUILD) ]; then rm -r $(BUILD); fi
+
+init:
+	@ mkdir -p $(BUILD)
+
+bindatadebug:
+	go-bindata -debug -pkg="handlers" -o="./handlers/bindata.go" ui/...
+
+dockerbuild:
+	docker build . -f dev/Dockerfile -t $(IMAGE)
+
+dockerpush:
+	docker push $(IMAGE)
+
+dockertestqa:
+	docker pull $(IMAGE)
+	docker run -ti --rm -v $(CURDIR):/go/src/github.com/andreiavrammsd/dotenv-editor $(IMAGE) make test qa
