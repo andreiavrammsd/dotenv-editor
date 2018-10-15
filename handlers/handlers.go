@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"strconv"
 
@@ -125,12 +127,6 @@ func (Handlers) Default(w http.ResponseWriter, _ *http.Request) {
 		"src": func(b []byte) template.Srcset {
 			return template.Srcset(b)
 		},
-		"css": func(b []byte) template.CSS {
-			return template.CSS(b)
-		},
-		"js": func(b []byte) template.JS {
-			return template.JS(b)
-		},
 	}
 
 	favicon, err := Asset("ui/favicon.png")
@@ -141,26 +137,10 @@ func (Handlers) Default(w http.ResponseWriter, _ *http.Request) {
 	faviconEncoded := make([]byte, base64.StdEncoding.EncodedLen(len(favicon)))
 	base64.StdEncoding.Encode(faviconEncoded, favicon)
 
-	css, err := Asset("ui/style.css")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	js, err := Asset("ui/script.js")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
 	data := struct {
 		Favicon []byte
-		CSS     []byte
-		JS      []byte
 	}{
 		faviconEncoded,
-		css,
-		js,
 	}
 
 	t, err := template.New(html).Funcs(funcMap).Parse(string(content))
@@ -170,6 +150,28 @@ func (Handlers) Default(w http.ResponseWriter, _ *http.Request) {
 	}
 
 	if err := t.Execute(w, data); err != nil {
+		log.Println(err)
+	}
+}
+
+// Static files
+func (Handlers) Static(w http.ResponseWriter, r *http.Request) {
+	path := strings.Trim(r.URL.Path, "/")
+	ext := strings.TrimPrefix(filepath.Ext(path), ".")
+
+	content, err := Asset(path)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	contentTypes := map[string]string{
+		"css": "text/css",
+		"js":  "text/javascript",
+	}
+
+	w.Header().Set("Content-Type", contentTypes[ext])
+	if _, err := w.Write(content); err != nil {
 		log.Println(err)
 	}
 }

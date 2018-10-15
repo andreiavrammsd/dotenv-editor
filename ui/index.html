@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link href="data:image/x-icon;base64,{{.Favicon|src}}" rel="icon" type="image/x-icon" />
-        <style type="text/css">{{.CSS|css}}</style>
+        <link rel="stylesheet" type="text/css" href="ui/style.css" />
     </head>
     
     <body>
@@ -64,6 +64,6 @@
             <textarea id="save-source" name="src" class="hidden"></textarea>
         </form>
 
-        <script>{{.JS|js}}</script>
+        <script src="ui/script.js"></script>
     </body>
 </html>

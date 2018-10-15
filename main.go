@@ -13,6 +13,7 @@ func main() {
 	e := env.New()
 	h := handlers.New(e)
 	http.HandleFunc("/", h.Default)
+	http.HandleFunc("/ui/", h.Static)
 	http.HandleFunc("/env/current", h.GetCurrent)
 	http.HandleFunc("/env/save", h.SaveAsFile)
 	http.HandleFunc("/env/file", h.LoadFromFile)
