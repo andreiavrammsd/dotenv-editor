@@ -1,7 +1,7 @@
 .PHONY: build test qa
 
 BUILD := $(CURDIR)/build
-BIN := $(BUILD)/dotenv
+BIN := $(BUILD)/dotenv-editor
 COVER := $(BUILD)/cover.out
 IMAGE := andreiavrammsd/dotenv-editor
 
