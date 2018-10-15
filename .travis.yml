@@ -1,0 +1,9 @@
+sudo: required
+
+language: minimal
+
+install:
+- docker pull andreiavrammsd/dotenv-editor
+
+script:
+- make dockertestqa
