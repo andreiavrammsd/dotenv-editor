@@ -24,7 +24,7 @@ type env struct {
 	reg *regexp.Regexp
 }
 
-// Current creates variables list based on current machin
+// Current creates variables list based on current machine
 func (e *env) Current() []Variable {
 	current := os.Environ()
 	return e.getVarsFromList(current)
