@@ -64,13 +64,13 @@ file.addEventListener('change', function() {
     };
 
     const reader = new FileReader();
-    // reader.readAsArrayBuffer(this.files[0]);
     reader.readAsBinaryString(this.files[0]);
     reader.onload = function() {
         saveSource.value = this.result;
         xhr.send(this.result);
     };
 
+    file.value = '';
 }, false);
 
 // Save to file
