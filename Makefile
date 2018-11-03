@@ -27,7 +27,6 @@ convey: init bindatadebug
 	goconvey
 
 qa: init
-	go vet ./...
 	gometalinter --config dev/.gometalinter.json ./...
 
 build: init test qa
