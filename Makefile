@@ -27,7 +27,6 @@ convey: init bindatadebug
 	goconvey
 
 qa: init
-	go tool vet -all . env handlers
 	go vet ./...
 	gometalinter --config dev/.gometalinter.json ./...
 
